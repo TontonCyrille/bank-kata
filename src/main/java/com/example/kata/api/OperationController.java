@@ -95,7 +95,7 @@ public class OperationController {
 
         List<Operation> listOperations = operationService.getAllOperationForAccount(new Date(), accountNumber, page, size);
 
-        OperationResponse operationResponse = new OperationResponse(String.format("Balance on %s = %s for accountNumber :%s",
+        OperationResponse operationResponse = new OperationResponse(String.format("Balance on %s = %s for accountNumber : %s",
                 new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                 accountBalance, accountNumber), listOperations);
 
