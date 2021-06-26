@@ -32,10 +32,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvcBuilder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Optional;
+import java.time.ZoneId;
+import java.util.*;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.*;
@@ -190,9 +188,13 @@ public class OperationControllerShould {
         assertThat(response.statusCode()).isEqualTo(200);
         DocumentContext jsonBody = JsonPath.parse(response.getBody().asString());
         JSONObject jsonObject = new JSONObject((LinkedHashMap)jsonBody.json());
-        assertThat(jsonObject.get("operationMessage")).hasToString("Balance on 2021-06-25 = 400.0 for accountNumber : 2001");
-        assertThat(jsonObject.get("body")).hasToString("[{\"date\":\"2021-06-25\",\"amount\":500,\"operationType\":\"DEPOSIT\"},{\"date\":\"2021-06-25\",\"amount\":100,\"operationType\":\"DEPOSIT\"},{\"date\":\"2021-06-25\",\"amount\":300,\"operationType\":\"WITHDRAWAL\"}]");
-
+        LocalDate localDate = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        assertThat(jsonObject.get("operationMessage")).hasToString("Balance on " + localDate + " = 400.0 for accountNumber : 2001");
+        assertThat(jsonObject.get("body")).hasToString("[" +
+                "{\"date\":\"" + localDate + "\",\"amount\":500,\"operationType\":\"DEPOSIT\"}," +
+                "{\"date\":\"" + localDate + "\",\"amount\":100,\"operationType\":\"DEPOSIT\"}," +
+                "{\"date\":\"" + localDate + "\",\"amount\":300,\"operationType\":\"WITHDRAWAL\"}" +
+                "]");
     }
 
 }
